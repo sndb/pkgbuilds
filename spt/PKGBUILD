@@ -1,0 +1,31 @@
+# Maintainer: sndb <sndb@sndb.xyz>
+
+pkgname=spt-git
+pkgver=0.6.r4.b053e63
+pkgrel=1
+pkgdesc='Simple pomodoro timer that doubles your efficiency'
+arch=('x86_64')
+url='https://github.com/sndb/spt'
+license=('custom:ISC')
+depends=('libnotify')
+makedepends=('git')
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+source=("$pkgname::git+https://github.com/sndb/spt.git")
+md5sums=('SKIP')
+
+pkgver() {
+	cd "$srcdir/${pkgname}"
+	printf "%s" "$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+build() {
+	cd "$srcdir/${pkgname}"
+	make clean
+}
+
+package() {
+	cd "$srcdir/${pkgname}"
+	make DESTDIR="$pkgdir/" PREFIX=/usr install
+	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname%-git}/LICENSE"
+}
