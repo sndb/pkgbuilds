@@ -1,0 +1,36 @@
+# Maintainer: sndb <sndb@sndb.xyz>
+
+pkgname=dwm-git
+pkgver=6.3.r0.d39e2f3
+pkgrel=1
+pkgdesc='A dynamic window manager for X'
+arch=('x86_64')
+url='https://dwm.suckless.org/'
+license=('MIT')
+depends=('libx11' 'libxinerama' 'libxft')
+makedepends=('git')
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+source=("$pkgname::git+https://git.suckless.org/dwm" "etc::git+https://github.com/sndb/etc.git")
+md5sums=('SKIP' 'SKIP')
+
+pkgver() {
+	cd "$srcdir/${pkgname}"
+	printf "%s" "$(git describe --long --tags | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+prepare() {
+	cd "$srcdir/${pkgname}"
+	cp -v "$srcdir/etc/dwm/config.h" .
+}
+
+build() {
+	cd "$srcdir/${pkgname}"
+	make clean
+}
+
+package() {
+	cd "$srcdir/${pkgname}"
+	make DESTDIR="$pkgdir/" PREFIX=/usr install
+	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname%-git}/LICENSE"
+}
