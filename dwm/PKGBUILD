@@ -12,8 +12,12 @@ depends=('libx11' 'libxinerama' 'libxft')
 makedepends=('git')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
-source=("$pkgname::git+https://git.suckless.org/dwm" "etc::git+https://github.com/sndb/etc.git")
-md5sums=('SKIP' 'SKIP')
+source=("$pkgname::git+https://git.suckless.org/dwm"
+        "etc::git+https://github.com/sndb/etc.git"
+        "https://dwm.suckless.org/patches/removeborder/dwm-removeborder-20200520-f09418b.diff")
+md5sums=('SKIP'
+         'SKIP'
+         '38fa4f557d34a53211a50431808ba51a')
 
 pkgver() {
 	cd "$srcdir/${pkgname}"
@@ -23,6 +27,7 @@ pkgver() {
 prepare() {
 	cd "$srcdir/${pkgname}"
 	cp -v "$srcdir/etc/dwm/config.h" .
+	patch --forward -p1 < "$srcdir/dwm-removeborder-20200520-f09418b.diff"
 }
 
 build() {
