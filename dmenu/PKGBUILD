@@ -1,0 +1,38 @@
+# Maintainer: sndb <sndb@sndb.xyz>
+
+pkgname=sndb-dmenu-git
+_pkgname=dmenu
+pkgver=5.1.r1.3a505ce
+pkgrel=1
+pkgdesc='A dynamic menu for X'
+arch=('x86_64')
+url='https://tools.suckless.org/dmenu/'
+license=('MIT')
+depends=('sh' 'libxinerama' 'libxft')
+makedepends=('git')
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+source=("$pkgname::git+https://git.suckless.org/dmenu"
+        "config.h")
+md5sums=('SKIP' 'SKIP')
+
+pkgver() {
+	cd "$srcdir/$pkgname"
+	printf "%s" "$(git describe --long --tags | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+prepare() {
+	cd "$srcdir/$pkgname"
+	cp -v "$srcdir/config.h" .
+}
+
+build() {
+	cd "$srcdir/$pkgname"
+	make clean
+}
+
+package() {
+	cd "$srcdir/$pkgname"
+	make DESTDIR="$pkgdir" PREFIX=/usr install
+	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+}
