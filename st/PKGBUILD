@@ -1,0 +1,45 @@
+# Maintainer: sndb <sndb@sndb.xyz>
+
+pkgname=sndb-st-git
+_pkgname=st
+pkgver=0.8.5.r4.e823e23
+pkgrel=1
+pkgdesc='A simple terminal implementation for X'
+arch=('x86_64')
+url='https://st.suckless.org/'
+license=('MIT')
+depends=('libxft')
+makedepends=('ncurses' 'libxext' 'git')
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+source=("$pkgname::git+https://git.suckless.org/st"
+        "config.h"
+        "anysize.diff::https://st.suckless.org/patches/anysize/st-anysize-0.8.4.diff"
+        "copyurl.diff::https://st.suckless.org/patches/copyurl/st-copyurl-20220217-0.8.5.diff")
+md5sums=('SKIP'
+         'SKIP'
+         'db025b249ee0b63ea6831f09a7d26655'
+         '7ce7b62c07456b3a06e676f539aad695')
+
+pkgver() {
+	cd "$srcdir/$pkgname"
+	printf "%s" "$(git describe --long --tags | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+prepare() {
+	cd "$srcdir/$pkgname"
+	cp -v "$srcdir/config.h" .
+	patch --verbose --forward -p1 < "$srcdir/anysize.diff"
+	patch --verbose --forward -p1 < "$srcdir/copyurl.diff"
+}
+
+build() {
+	cd "$srcdir/$pkgname"
+	make clean
+}
+
+package() {
+	cd "$srcdir/$pkgname"
+	make DESTDIR="$pkgdir/" PREFIX=/usr install
+	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+}
