@@ -12,7 +12,7 @@ depends=('libxft')
 makedepends=('ncurses' 'libxext' 'git')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
-source=("$pkgname::git+https://git.suckless.org/st"
+source=("git+https://git.suckless.org/$_pkgname"
         "config.h"
         "anysize.diff::https://st.suckless.org/patches/anysize/st-anysize-0.8.4.diff"
         "copyurl.diff::https://st.suckless.org/patches/copyurl/st-copyurl-20220217-0.8.5.diff")
@@ -22,24 +22,24 @@ md5sums=('SKIP'
          '7ce7b62c07456b3a06e676f539aad695')
 
 pkgver() {
-	cd "$srcdir/$pkgname"
+	cd "$srcdir/$_pkgname"
 	printf "%s" "$(git describe --long --tags | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
 }
 
 prepare() {
-	cd "$srcdir/$pkgname"
+	cd "$srcdir/$_pkgname"
 	cp -v "$srcdir/config.h" .
-	patch --verbose --forward -p1 < "$srcdir/anysize.diff"
-	patch --verbose --forward -p1 < "$srcdir/copyurl.diff"
+	patch --forward -p1 < "$srcdir/anysize.diff"
+	patch --forward -p1 < "$srcdir/copyurl.diff"
 }
 
 build() {
-	cd "$srcdir/$pkgname"
+	cd "$srcdir/$_pkgname"
 	make clean
 }
 
 package() {
-	cd "$srcdir/$pkgname"
-	make DESTDIR="$pkgdir/" PREFIX=/usr install
-	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+	cd "$srcdir/$_pkgname"
+	make DESTDIR="$pkgdir" PREFIX=/usr install
+	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

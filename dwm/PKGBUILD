@@ -12,7 +12,7 @@ depends=('libx11' 'libxinerama' 'libxft')
 makedepends=('git')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
-source=("$pkgname::git+https://git.suckless.org/dwm"
+source=("git+https://git.suckless.org/$_pkgname"
         "config.h"
         "removeborder.diff::https://dwm.suckless.org/patches/removeborder/dwm-removeborder-20200520-f09418b.diff")
 md5sums=('SKIP'
@@ -20,23 +20,23 @@ md5sums=('SKIP'
          '38fa4f557d34a53211a50431808ba51a')
 
 pkgver() {
-	cd "$srcdir/$pkgname"
+	cd "$srcdir/$_pkgname"
 	printf "%s" "$(git describe --long --tags | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
 }
 
 prepare() {
-	cd "$srcdir/$pkgname"
+	cd "$srcdir/$_pkgname"
 	cp -v "$srcdir/config.h" .
 	patch --verbose --forward -p1 < "$srcdir/removeborder.diff"
 }
 
 build() {
-	cd "$srcdir/$pkgname"
+	cd "$srcdir/$_pkgname"
 	make clean
 }
 
 package() {
-	cd "$srcdir/$pkgname"
-	make DESTDIR="$pkgdir/" PREFIX=/usr install
-	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+	cd "$srcdir/$_pkgname"
+	make DESTDIR="$pkgdir" PREFIX=/usr install
+	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
