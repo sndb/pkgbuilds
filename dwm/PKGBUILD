@@ -2,7 +2,7 @@
 
 pkgname=sndb-dwm-git
 _pkgname=dwm
-pkgver=6.3.r0.d39e2f3
+pkgver=6.3.r2.bece862
 pkgrel=1
 pkgdesc='A dynamic window manager for X'
 arch=('x86_64')
@@ -14,10 +14,10 @@ provides=("$_pkgname")
 conflicts=("$_pkgname")
 source=("git+https://git.suckless.org/$_pkgname"
         "config.h"
-        "removeborder.diff::https://dwm.suckless.org/patches/removeborder/dwm-removeborder-20200520-f09418b.diff")
+        "scratchpad.diff::https://dwm.suckless.org/patches/dynamicscratchpads/dwm-scratchpad-20200727-bb2e7222baeec7776930354d0e9f210cc2aaad5f.diff")
 md5sums=('SKIP'
          'SKIP'
-         '38fa4f557d34a53211a50431808ba51a')
+         '35c20af7c1ee777f2de65a852207156c')
 
 pkgver() {
 	cd "$srcdir/$_pkgname"
@@ -27,7 +27,7 @@ pkgver() {
 prepare() {
 	cd "$srcdir/$_pkgname"
 	cp -v "$srcdir/config.h" .
-	patch --verbose --forward -p1 < "$srcdir/removeborder.diff"
+	patch --verbose --forward -p1 < "$srcdir/scratchpad.diff"
 }
 
 build() {

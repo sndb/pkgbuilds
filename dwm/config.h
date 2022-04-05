@@ -3,17 +3,17 @@
 #include <X11/XF86keysym.h>
 
 /* appearance */
-static const unsigned int borderpx  = 2;        /* border pixel of windows */
+static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "Iosevka:size=12" };
 static const char col_norm_fg[]     = "#81a1c1";
 static const char col_norm_bg[]     = "#2e3440";
-static const char col_norm_border[] = "#3b4252";
+static const char col_norm_border[] = "#4c566a";
 static const char col_sel_fg[]      = "#2e3440";
 static const char col_sel_bg[]      = "#81a1c1";
-static const char col_sel_border[]  = "#bf616a";
+static const char col_sel_border[]  = "#b48ead";
 static const char *colors[][3]      = {
 	/*               fg           bg           border         */
 	[SchemeNorm] = { col_norm_fg, col_norm_bg, col_norm_border },
@@ -115,6 +115,9 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ MODKEY,                       XK_minus, scratchpad_show, {0} },
+	{ MODKEY|ShiftMask,             XK_minus, scratchpad_hide, {0} },
+	{ MODKEY,                       XK_equal,scratchpad_remove,{0} },
 };
 
 /* button definitions */
